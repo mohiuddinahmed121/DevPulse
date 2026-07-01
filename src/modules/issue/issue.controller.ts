@@ -83,10 +83,12 @@ const deleteIssue = async (req: Request, res: Response) => {
          success: true,
          message: "Issue deleted successfully",
       });
-   } catch (error: any) {
-      res.status(404).json({
+   } catch (error: unknown) {
+      const err = error as Error;
+
+      res.status(400).json({
          success: false,
-         message: error.message,
+         message: err.message,
       });
    }
 };

@@ -137,8 +137,6 @@ const getSingleIssueFromDB = async (id: number) => {
 };
 
 const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
-   console.log("payload =", payload);
-   console.log("user =", user);
    const issueResult = await pool.query(
       `
     SELECT *
@@ -164,45 +162,31 @@ const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
       }
    }
 
-   const fields: string[] = [];
-   const values: any[] = [];
+   let statusValue = null;
 
-   let count = 1;
-
-   if (payload.title) {
-      fields.push(`title=$${count++}`);
-      values.push(payload.title);
+   if (user.role === "maintainer") {
+      statusValue = payload.status;
    }
-
-   if (payload.description) {
-      fields.push(`description=$${count++}`);
-      values.push(payload.description);
-   }
-
-   if (payload.type) {
-      fields.push(`type=$${count++}`);
-      values.push(payload.type);
-   }
-
-   if (user.role === "maintainer" && payload.status) {
-      fields.push(`status=$${count++}`);
-      values.push(payload.status);
-   }
-
-   fields.push(`updated_at=NOW()`);
-
-   values.push(issueId);
 
    const result = await pool.query(
       `
     UPDATE issues
-    SET ${fields.join(", ")}
-
-    WHERE id=$${count}
-
+    SET
+      title = COALESCE($1, title),
+      description = COALESCE($2, description),
+      type = COALESCE($3, type),
+      status = COALESCE($4, status),
+      updated_at = NOW()
+    WHERE id = $5
     RETURNING *
     `,
-      values,
+      [
+         payload.title ?? null,
+         payload.description ?? null,
+         payload.type ?? null,
+         statusValue,
+         issueId,
+      ],
    );
 
    return result.rows[0];
@@ -211,9 +195,8 @@ const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
 const deleteIssueFromDB = async (issueId: number) => {
    const issueResult = await pool.query(
       `
-    SELECT *
-    FROM issues
-    WHERE id = $1
+    SELECT * FROM issues
+    WHERE id=$1
     `,
       [issueId],
    );
@@ -225,12 +208,12 @@ const deleteIssueFromDB = async (issueId: number) => {
    await pool.query(
       `
     DELETE FROM issues
-    WHERE id = $1
+    WHERE id=$1
     `,
       [issueId],
    );
 
-   return null;
+   return;
 };
 
 export const issueService = {
