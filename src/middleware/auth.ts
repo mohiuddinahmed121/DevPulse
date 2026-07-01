@@ -13,6 +13,7 @@ const auth = (...roles: ROLES[]) => {
             return res.status(401).json({
                success: false,
                message: "Unauthorized",
+               errors: "Authentication token is required",
             });
          }
 
@@ -24,6 +25,7 @@ const auth = (...roles: ROLES[]) => {
             return res.status(403).json({
                success: false,
                message: "Forbidden",
+               errors: "Insufficient permissions",
             });
          }
 
@@ -32,6 +34,7 @@ const auth = (...roles: ROLES[]) => {
          return res.status(401).json({
             success: false,
             message: "Invalid Token",
+            errors: "Invalid or expired JWT token",
          });
       }
    };
