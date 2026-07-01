@@ -20,7 +20,7 @@ const createIssue = async (req: Request, res: Response) => {
       res.status(400).json({
          success: false,
          message: err.message,
-         error: error,
+         error: err.message,
       });
    }
 };
@@ -40,7 +40,7 @@ const getAllIssues = async (req: Request, res: Response) => {
       res.status(500).json({
          success: false,
          message: err.message,
-         error: error,
+         error: err.message,
       });
    }
 };
@@ -60,7 +60,7 @@ const getSingleIssue = async (req: Request, res: Response) => {
       res.status(404).json({
          success: false,
          message: err.message,
-         error: error,
+         error: err.message,
       });
    }
 };
@@ -84,7 +84,7 @@ const updateIssue = async (req: Request, res: Response) => {
       res.status(400).json({
          success: false,
          message: err.message,
-         error: error,
+         error: err.message,
       });
    }
 };
@@ -103,7 +103,7 @@ const deleteIssue = async (req: Request, res: Response) => {
       res.status(400).json({
          success: false,
          message: err.message,
-         error: error,
+         error: err.message,
       });
    }
 };
