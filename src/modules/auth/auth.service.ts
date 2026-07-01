@@ -12,7 +12,6 @@ const createUserIntoDB = async (payload: {
 }) => {
    const { name, email, password, role } = payload;
 
-   // Check Existing User
    const existingUser = await pool.query(
       `
       SELECT * FROM users
@@ -25,10 +24,8 @@ const createUserIntoDB = async (payload: {
       throw new Error("User already exists");
    }
 
-   // Hash Password
    const hashedPassword = await bcrypt.hash(password, 10);
 
-   // Insert User
    const result = await pool.query(
       `
       INSERT INTO users
@@ -52,7 +49,6 @@ const createUserIntoDB = async (payload: {
 const loginUserIntoDB = async (payload: { email: string; password: string }) => {
    const { email, password } = payload;
 
-   // Find User
    const userData = await pool.query(
       `
       SELECT *
@@ -68,21 +64,18 @@ const loginUserIntoDB = async (payload: { email: string; password: string }) => 
 
    const user = userData.rows[0];
 
-   // Compare Password
    const matchPassword = await bcrypt.compare(password, user.password);
 
    if (!matchPassword) {
       throw new Error("Invalid credentials");
    }
 
-   // JWT Payload
    const jwtPayload = {
       id: user.id,
       name: user.name,
       role: user.role,
    };
 
-   // Generate Token
    const token = jwt.sign(jwtPayload, config.jwt_secret, {
       expiresIn: "1d",
    });
