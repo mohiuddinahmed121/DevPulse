@@ -7,7 +7,6 @@ export const pool = new Pool({
 
 export const initDB = async () => {
    try {
-      // Users Table
       await pool.query(`
       CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
@@ -30,7 +29,6 @@ export const initDB = async () => {
       )
     `);
 
-      // Issues Table
       await pool.query(`
       CREATE TABLE IF NOT EXISTS issues(
         id SERIAL PRIMARY KEY,
@@ -58,8 +56,8 @@ export const initDB = async () => {
       )
     `);
 
-      console.log("Database connected successfully!");
-      console.log("Tables initialized successfully!");
+      console.log("Database connected successfully");
+      console.log("Tables initialiZ successfully");
    } catch (error) {
       console.log(error);
    }

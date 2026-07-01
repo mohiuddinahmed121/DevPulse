@@ -4,19 +4,14 @@ import { issueController } from "./issue.controller";
 
 const router = Router();
 
-// Create Issue
 router.post("/", auth("contributor", "maintainer"), issueController.createIssue);
 
-// Get All Issues
 router.get("/", issueController.getAllIssues);
 
-// Get Single Issue
 router.get("/:id", issueController.getSingleIssue);
 
-// Update Issue
 router.patch("/:id", auth("contributor", "maintainer"), issueController.updateIssue);
 
-// Delete Issue
 router.delete("/:id", auth("maintainer"), issueController.deleteIssue);
 
 export const issueRoute = router;

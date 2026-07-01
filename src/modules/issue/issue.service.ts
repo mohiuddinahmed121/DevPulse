@@ -10,7 +10,6 @@ const createIssueIntoDB = async (
 ) => {
    const { title, description, type } = payload;
 
-   // Validation
    if (title.length > 150) {
       throw new Error("Title must be less than 150 characters");
    }
@@ -138,7 +137,6 @@ const getSingleIssueFromDB = async (id: number) => {
 };
 
 const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
-   // Find Issue
    console.log("payload =", payload);
    console.log("user =", user);
    const issueResult = await pool.query(
@@ -156,14 +154,11 @@ const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
 
    const issue = issueResult.rows[0];
 
-   // Contributor Rules
    if (user.role === "contributor") {
-      // Own issue only
       if (issue.reporter_id !== user.id) {
          throw new Error("You can update only your own issues");
       }
 
-      // Must be open
       if (issue.status !== "open") {
          throw new Error("Only open issues can be updated");
       }
@@ -189,7 +184,6 @@ const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
       values.push(payload.type);
    }
 
-   // Maintainer can change status
    if (user.role === "maintainer" && payload.status) {
       fields.push(`status=$${count++}`);
       values.push(payload.status);
