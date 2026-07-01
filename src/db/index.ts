@@ -56,8 +56,8 @@ export const initDB = async () => {
       )
     `);
 
-      console.log("Database connected successfully");
-      console.log("Tables initialiZ successfully");
+      console.log("Database connected");
+      console.log("Tables initialiZ");
    } catch (error) {
       console.log(error);
    }
