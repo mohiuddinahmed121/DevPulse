@@ -139,6 +139,8 @@ const getSingleIssueFromDB = async (id: number) => {
 
 const updateIssueIntoDB = async (issueId: number, payload: any, user: any) => {
    // Find Issue
+   console.log("payload =", payload);
+   console.log("user =", user);
    const issueResult = await pool.query(
       `
     SELECT *
